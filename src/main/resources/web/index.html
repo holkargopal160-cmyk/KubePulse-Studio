@@ -65,6 +65,13 @@
     </div>
 
     <script>
+        // Yeh function Java (JSBridgeController) se call hoga aur logs screen par dikhayega
+        function appendTerminalLog(message) {
+            const logsElem = document.getElementById('logs');
+            logsElem.innerText += "\n" + message;
+            logsElem.scrollTop = logsElem.scrollHeight; // Auto-scroll to bottom
+        }
+
         function startDeploy() {
             const url = document.getElementById('repoUrl').value;
             document.getElementById('logs').innerText += "\n[INFO] Triggering pipeline for: " + url;
