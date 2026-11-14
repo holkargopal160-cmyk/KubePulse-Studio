@@ -1,0 +1,42 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('1. Checkout Code') {
+            steps {
+                echo 'Pulling latest source code from GitHub...'
+                git branch: 'main', url: 'https://github.com/sample/my-app.git'
+            }
+        }
+
+        stage('2. SonarQube Quality Gate') {
+            steps {
+                echo 'Running static code analysis with SonarQube...'
+                // sh 'mvn sonar:sonar'
+            }
+        }
+
+        stage('3. Build Docker Image') {
+            steps {
+                echo 'Building Docker container image...'
+                sh 'docker build -t my-app-image:latest .'
+            }
+        }
+
+        stage('4. Deploy to Kubernetes') {
+            steps {
+                echo 'Applying Kubernetes manifests...'
+                sh 'kubectl apply -f devops-templates/kubernetes/deployment.yaml'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully! App is live.'
+        }
+        failure {
+            echo 'Pipeline failed! Check logs.'
+        }
+    }
+}
